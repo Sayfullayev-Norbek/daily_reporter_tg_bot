@@ -32,7 +32,6 @@ class CompanyController extends Controller
             $company = Company::query()->where('modme_company_id', $modme_company_id)->where('modme_token', $token)->first();
 
             if($company){
-
                 $branches = $this->modmeService->checkCompany($token);
                 return "Ok";
             }else{

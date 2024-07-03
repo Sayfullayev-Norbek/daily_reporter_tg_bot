@@ -5,7 +5,6 @@ namespace App\Service;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
-use Ramsey\Uuid\Type\Integer;
 
 class ModmeService
 {
@@ -22,7 +21,8 @@ class ModmeService
         $this->token = $token;
     }
 
-    public function checkToken(string $token) :mixed
+    // Modme-da berilgan tokenni tekshirish
+    public function checkToken(string $token): mixed
     {
         try {
             $client = new Client();
@@ -39,4 +39,22 @@ class ModmeService
         }
     }
 
+    // Modme-da shu token bo'yicha kompaniyaga filiallarini tekshirish
+    public function checkCompany($token)
+    {
+        try {
+            $client = new Client();
+            $post = $client->get($this->modme_url."/v2/branches", [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json'
+                ]
+            ]);
+            return json_decode($post->getBody()->getContents(), true);
+        } catch (GuzzleException $e) {
+            Log::error($e->getMessage());
+            abort(500, $e->getMessage());
+        }
+    }
 }
+
