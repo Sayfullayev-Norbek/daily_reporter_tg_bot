@@ -2,6 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Milly\Laragram\FSM\FSM;
+use Milly\Laragram\Laragram;
+use App\Models\BotUser;
+use App\Http\Controllers\BotUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +20,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::get('/bot', function () {
+    return Laragram::sendMessage(
+        chat_id: 1585277374,
+        text: 'Saytdan '
+    );
+});
+
+Route::post('/bot', function(){
+    FSM::route('/', [BotUserController::class, 'start_private']);
 });

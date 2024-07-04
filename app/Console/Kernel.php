@@ -4,20 +4,32 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Http\Controllers\BotUserController;
+use App\Models\BotUser;
+use App\Models\Company;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * Define the application's command schedule.
-     */
-    protected function schedule(Schedule $schedule): void
+    protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->call(function () {
+
+            $botUsers = BotUser::all();
+
+            foreach ($botUsers as $botUser) {
+                $chat_id = $botUser->telegram_id;
+                $modme_company_id = $botUser->modme_company_id;
+
+                $company = Company::query()->where('modme_company_id', $modme_company_id)->first();
+                $token = $company->modme_token;
+                $company_name = $company->name;
+
+                $controller = app()->make(BotUserController::class);
+                $controller->plan_execution($chat_id, $token, $company_name);
+            }
+        })->dailyAt('17:23');
     }
 
-    /**
-     * Register the commands for the application.
-     */
     protected function commands(): void
     {
         $this->load(__DIR__.'/Commands');

@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreCompanyRequest;
-use App\Http\Requests\UpdateCompanyRequest;
 use App\Service\ModmeService;
 
 class CompanyController extends Controller
@@ -33,7 +31,7 @@ class CompanyController extends Controller
 
             if($company){
                 $branches = $this->modmeService->checkCompany($token);
-                return "Ok";
+                return view('index', compact('company'));
             }else{
                 return view('tariff.tariff', compact('token'));
             }
