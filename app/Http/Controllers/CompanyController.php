@@ -23,6 +23,7 @@ class CompanyController extends Controller
 
         $token = $request->input('token');
         $tokenInfo = $this->modmeService->checkToken($token);
+        dd($this->modmeService->checkGroup(147,$token));
 
         if(!empty($tokenInfo) && isset($tokenInfo['data']['company']['id'])){
 

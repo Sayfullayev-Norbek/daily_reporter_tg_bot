@@ -56,5 +56,29 @@ class ModmeService
             abort(500, $e->getMessage());
         }
     }
+
+    // Modme-da filail guruhlarni olish f-yasi
+    public function checkGroup($branch_id, $token)
+    {
+        try{
+            $client = new Client();
+            $response = $client->get($this->modme_url."/v2/groups",[
+                'query' => [
+                    'branch_id' => $branch_id,
+                ],
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json'
+
+                ]
+            ]);
+
+            return json_decode($response->getBody()->getContents(), true);
+        }catch (GuzzleException $e) {
+            Log::error($e->getMessage());
+            abort(500, $e->getMessage());
+        }
+
+    }
 }
 
