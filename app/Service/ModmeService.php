@@ -58,7 +58,7 @@ class ModmeService
     }
 
     // Modme-da filail guruhlarni olish f-yasi
-    public function checkGroup($branch_id, $token, $i)
+    public function getGroups($branch_id, $token, $i)
     {
         try{
             $client = new Client();
@@ -71,7 +71,6 @@ class ModmeService
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
                     'Content-Type' => 'application/json'
-
                 ]
             ]);
 

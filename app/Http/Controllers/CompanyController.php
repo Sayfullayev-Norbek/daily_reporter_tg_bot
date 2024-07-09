@@ -6,7 +6,6 @@ use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Service\ModmeService;
 use Carbon\Carbon;
-use App\Http\Controllers\Log;
 
 class CompanyController extends Controller
 {
@@ -26,45 +25,10 @@ class CompanyController extends Controller
         $token = $request->input('token');
         $tokenInfo = $this->modmeService->checkToken($token);
 
-        $to_day = Carbon::now();
-            $now = Carbon::now()->dayName;
-
-            $groups = $this->modmeService->checkGroup(147, $token, 0);
-            $total_pages = $groups['pagination']['totalPages'];
-
-            $n = 0;
-            for ($i = 0; $i <= $total_pages; $i++) {
-                $groups = $this->modmeService->checkGroup(147, $token, $i);
-                $groups = $groups['data'];
-
-                foreach ($groups as $group) {
-                    $days = $group['days'];
-                    $groupDays = [];
-
-                    if ($days == 1) {
-                        $groupDays = ['Monday', 'Wednesday', 'Friday'];
-                    } elseif ($days == 2) {
-                        $groupDays = ['Tuesday', 'Thursday', 'Saturday'];
-                    } elseif ($days == 3) {
-                        $groupDays = ['Saturday', 'Sunday'];
-                    } elseif ($days == 4) {
-                        $groupDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-                    } else {
-                        $groupDays = ["Monday", "Tuesday", "Wednesday"];
-                    }
-                    if (in_array($now, $groupDays)) {
-                        $n++;
-                    }
-                }
-
-            }dd($n);
-
-
-
-
         if(!empty($tokenInfo) && isset($tokenInfo['data']['company']['id'])){
 
             $modme_company_id = $tokenInfo['data']['company']['id'];
+
             $company = Company::query()->where('modme_company_id', $modme_company_id)->where('modme_token', $token)->first();
 
             if($company){

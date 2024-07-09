@@ -8,16 +8,10 @@ use Milly\Laragram\Types\Message;
 use Milly\Laragram\Laragram;
 use App\Service\ModmeService;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class BotUserController extends Controller
 {
-    private ModmeService $modmeService;
-
-    public function __construct(ModmeService $modmeService)
-    {
-        $this->modmeService = $modmeService;
-    }
+    public ModmeService $modmeService;
 
     public function start_private(Message $message)
     {
@@ -29,7 +23,7 @@ class BotUserController extends Controller
             if(str_contains($text, "/start ")){
                 $modme_company_id = explode(" ", $text)[1];
 
-                $company = Company::query()->where('')->where('modme_company_id',$modme_company_id)->first();
+                $company = Company::query()->where('modme_company_id',$modme_company_id)->first();
 
                 if($company){
                     $bot = BotUser::query()->where('telegram_id', $chat_id)->where('modme_company_id',$modme_company_id)->first();
@@ -66,6 +60,8 @@ class BotUserController extends Controller
     }
 
     public function plan_execution($chat_id, $token, $company_name){
+        $this->modmeService = new ModmeService();
+
         $data = $this->modmeService->checkCompany($token);
         $branches = $data['data'];
 
@@ -74,40 +70,36 @@ class BotUserController extends Controller
             $branch_name = $branch['name'];
 
             $to_day = Carbon::now();
-            $now = Carbon::now()->dayName;
+            $now =  Carbon::now()->dayName;
 
-            $groups = $this->modmeService->checkGroup($branch_id, $token, 0);
+            $groups = $this->modmeService->getGroups($branch_id, $token, 1);
             $total_pages = $groups['pagination']['totalPages'];
 
-            $n = 0;
+            $n = "";
             for ($i = 1; $i <= $total_pages; $i++) {
-                $groups = $this->modmeService->checkGroup($branch_id, $token, $i);
+                $groups = $this->modmeService->getGroups($branch_id, $token, $i);
                 $groups = $groups['data'];
 
                 foreach ($groups as $group) {
-
                     $days = $group['days'];
-                    $groupDays = [];
 
-                    if ($days == 1) {
+                    if($group['status'] == 2){
 
-                        $groupDays = ["Monday", "Wednesday", "Friday"];
-                    } elseif ($days == 2) {
+                        if ($days == 1) {
+                            $groupDays = ["Monday", "Wednesday", "Friday"];
+                        } elseif ($days == 2) {
+                            $groupDays = ["Tuesday", "Thursday", "Saturday"];
+                        } elseif ($days == 3) {
+                            $groupDays = ["Saturday", "Sunday"];
+                        } elseif ($days == 4) {
+                            $groupDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+                        } else {
+                            $groupDays = ["Monday", "Tuesday", "Wednesday"];
+                        }
 
-                        $groupDays = ["Tuesday", "Thursday", "Saturday"];
-                    } elseif ($days == 3) {
-
-                        $groupDays = ["Saturday", "Sunday"];
-                    } elseif ($days == 4) {
-
-                        $groupDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-                    } else {
-
-                        $groupDays = ["Monday", "Tuesday", "Wednesday"];
-                    }
-
-                    if (in_array($now, $groupDays)) {
-                        $n++;
+                        if (in_array($now, $groupDays)) {
+                            $n .= $group['name'] . " ,";
+                        }
                     }
                 }
             }
