@@ -8,6 +8,9 @@ use Milly\Laragram\Types\Message;
 use Milly\Laragram\Laragram;
 use App\Service\ModmeService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Session;
 
 class BotUserController extends Controller
 {
@@ -59,73 +62,96 @@ class BotUserController extends Controller
         }
     }
 
-    public function plan_execution($chat_id, $token, $company_name){
+    public function plan_execution($chat_id, $token, $company_name, $lang){
         $this->modmeService = new ModmeService();
 
-        $data = $this->modmeService->checkCompany($token);
-        $branches = $data['data'];
+        if(in_array($lang, ['en', 'ru', 'uz'])){
+            $locale = $lang ?? 'en';
+            App::setLocale($locale);
 
-        foreach($branches as $branch){
-            $branch_id = $branch['id'];
-            $branch_name = $branch['name'];
+            $data = $this->modmeService->checkCompany($token);
+            $branches = $data['data'];
 
-            $to_day = Carbon::now();
-            $now =  Carbon::now()->dayName;
+            foreach($branches as $branch){
+                $branch_id = $branch['id'];
+                $branch_name = $branch['name'];
 
-            $groups = $this->modmeService->getGroups($branch_id, $token, 1);
-            $total_pages = $groups['pagination']['totalPages'];
+                $to_day = Carbon::now();
+                App::setLocale('en'); // dayName u/n en qilganmiz
+                $now =  Carbon::now()->dayName;
+                $to_from = Carbon::now()->format('Y-m-d');
+                App::setLocale($locale);
 
-            $n = "";
-            for ($i = 1; $i <= $total_pages; $i++) {
-                $groups = $this->modmeService->getGroups($branch_id, $token, $i);
-                $groups = $groups['data'];
+                $groups = $this->modmeService->getGroups($branch_id, $token, 1);
+                $total_pages = $groups['pagination']['totalPages'];
 
-                foreach ($groups as $group) {
-                    $days = $group['days'];
+                $number_of_groups = 0;
+                $came_to_class = 0;
+                $did_not_come_to_class = 0;
+                $attendance_not_specified = 0;
 
-                    if($group['status'] == 2){
+                for ($i = 1; $i <= $total_pages; $i++) {
+                    $groups = $this->modmeService->getGroups($branch_id, $token, $i);
+                    $groups = $groups['data'];
 
-                        if ($days == 1) {
-                            $groupDays = ["Monday", "Wednesday", "Friday"];
-                        } elseif ($days == 2) {
-                            $groupDays = ["Tuesday", "Thursday", "Saturday"];
-                        } elseif ($days == 3) {
-                            $groupDays = ["Saturday", "Sunday"];
-                        } elseif ($days == 4) {
-                            $groupDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-                        } else {
-                            $groupDays = ["Monday", "Tuesday", "Wednesday"];
-                        }
+                    foreach ($groups as $group) {
+                        $days = $group['days'];
 
-                        if (in_array($now, $groupDays)) {
-                            $n .= $group['name'] . " ,";
+                        if($group['status'] == 2){
+
+                            if ($days == 1) {
+                                $groupDays = ["Monday", "Wednesday", "Friday"];
+                            } elseif ($days == 2) {
+                                $groupDays = ["Tuesday", "Thursday", "Saturday"];
+                            } elseif ($days == 3) {
+                                $groupDays = ["Saturday", "Sunday"];
+                            } elseif ($days == 4) {
+                                $groupDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+                            } else {
+                                $groupDays = ["Monday", "Tuesday", "Wednesday"];
+                            }
+
+                            if (in_array($now, $groupDays)) {
+                                $number_of_groups++;
+                            }
+
+                            $group_id = $group['id'];
+                            $to_Attendes = $this->modmeService->getAttendanes($token, $branch_id, $group_id, $to_from);
+
+                            foreach($to_Attendes as $to_Attend){
+                                if(!empty($to_Attend['student_pay'])){
+                                    $student_pay = $to_Attend['student_pay'];
+
+                                    if($student_pay == 1){
+                                        $came_to_class++;
+                                    }elseif($student_pay == 0){
+                                        $did_not_come_to_class++;
+                                    }else{
+                                        $attendance_not_specified++;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
+
+                $resAnswer = [
+                    'to_day' => $to_day,
+                    'company_name' => $company_name,
+                    'branch_name' => $branch_name,
+                    'number_of_groups' => $number_of_groups,
+                    'came_to_class' => $came_to_class,
+                    'did_not_come_to_class' => $did_not_come_to_class,
+                    'attendance_not_specified' => $attendance_not_specified
+                ];
+
+                $text = __('messages.message', $resAnswer);
+
+                Laragram::sendMessage(
+                    chat_id: $chat_id,
+                    text: $text
+                );
             }
-
-           $answer = "
-• Bugungi davomat:  $to_day
-
-• Korxona:  $company_name
-• Filiali:  $branch_name
-
-• Guruhlar soni: $n
-
-• Darsga keldi: API keladiyov
-• Darsga kelmadi: API keladiyov
-• Davomat belgilanmadi: API keladiyov
-
-• Aktiv lidlar: API keladiyov
-• Aktiv studentlar: API keladiyov
-
-• Qarzdorlar soni: API keladiyov
-• Umumiy qarzlar: API keladiyov
-";
-            Laragram::sendMessage(
-                chat_id: $chat_id,
-                text: $answer
-            );
         }
     }
 }
