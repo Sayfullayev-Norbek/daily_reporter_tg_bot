@@ -9,7 +9,6 @@ use Milly\Laragram\Laragram;
 use App\Service\ModmeService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Session;
 
 class BotUserController extends Controller
