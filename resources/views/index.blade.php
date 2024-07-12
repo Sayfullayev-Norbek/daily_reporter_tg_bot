@@ -42,6 +42,10 @@
 
                 </div>
             </div>
+
         </div>
+
+        @include('rating')
+
     </div>
 @endsection

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Rating;
 use Illuminate\Http\Request;
 use App\Service\ModmeService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Redirect;
 
 class CompanyController extends Controller
 {
@@ -69,6 +71,38 @@ class CompanyController extends Controller
             return redirect()->route('index')->with('token', $token);
         }else{
             return "Modme token orqali kirishingiz kerak!";
+        }
+    }
+
+    public function ratingStore(Request $request){
+        $request->validate([
+            'token' => 'required',
+            'rating' => 'required',
+        ]);
+        $token = $request->input('token');
+        $rating = $request->rating;
+        $rating_label = $request->input('rating_label');
+
+        $company = Company::query()->where('modme_token', $token)->first();
+        if($company){
+            $modme_company_id = $company->modme_company_id;
+            $company_rating = $company->rating()->first();
+
+            $data = [
+                'modme_company_id' => $modme_company_id,
+                'rating' => $rating,
+                'rating_label' => $rating_label
+            ];
+
+            if(!empty($company_rating)){
+                $company_rating->update($data);
+            }else{
+                Rating::query()->create($data);
+            }
+
+            return redirect()->route('index')->with('token', $token);
+        }else{
+            return "O'zingini Company tokenizdan foydalaning!";
         }
     }
 }

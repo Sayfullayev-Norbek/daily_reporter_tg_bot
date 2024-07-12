@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class BotUser extends Model
+class Rating extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["telegram_id","telegram_name", "company_id"];
+    protected $fillable = ['modme_company_id', 'rating', 'rating_label'];
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class, 'modme_company_id');
     }
 }

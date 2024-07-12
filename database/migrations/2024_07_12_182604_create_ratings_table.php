@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bot_users', function (Blueprint $table) {
+        Schema::create('ratings', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('telegram_id')->unique();
-            $table->string('telegram_name');
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->bigInteger('modme_company_id');
+            $table->bigInteger('rating');
+            $table->string('rating_label');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bot_users');
+        Schema::dropIfExists('ratings');
     }
 };
