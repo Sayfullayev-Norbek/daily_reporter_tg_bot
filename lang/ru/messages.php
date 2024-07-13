@@ -17,9 +17,10 @@ return [
 • Активные студенты: :active_students
 
 • Количество должников: :debtors
-• Общий долг: API
+
+• Ушли активные студенты: :gone_active_students
+• Оплатили в этом месяце: :paid_this_month
+• Студенты на пробном периоде: :students_in_trial
+• Ушли пробные студенты: :gone_trial_students
 ",
-    //'company_name' => 'Ваша кампания',
-    //'text_1' => 'Это телеграм-бот',
-    //'text_2' => 'Это телеграм-бот',
 ];

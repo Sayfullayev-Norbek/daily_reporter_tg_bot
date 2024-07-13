@@ -80,7 +80,7 @@ class BotUserController extends Controller
 
                 $to_day = Carbon::now();
                 App::setLocale('en'); // dayName u/n en qilganmiz
-                $now =  Carbon::now()->dayName;
+                $now =  Carbon::now()->format('D');
                 $to_from = Carbon::now()->format('Y-m-d');
                 App::setLocale($locale);
 
@@ -102,15 +102,15 @@ class BotUserController extends Controller
                         if($group['status'] == 2){
 
                             if ($days == 1) {
-                                $groupDays = ["Monday", "Wednesday", "Friday"];
+                                $groupDays = ["Mon", "Wed", "Fri"];
                             } elseif ($days == 2) {
-                                $groupDays = ["Tuesday", "Thursday", "Saturday"];
+                                $groupDays = ["Tue", "Thu", "Sat"];
                             } elseif ($days == 3) {
-                                $groupDays = ["Saturday", "Sunday"];
+                                $groupDays = ["Sat", "Sun"];
                             } elseif ($days == 4) {
-                                $groupDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+                                $groupDays = ["Mon", "Tuesday", "Wed", "Thu", "Fri", "Sat", "Sun"];
                             } else {
-                                $groupDays = ["Monday", "Tuesday", "Wednesday"];
+                                $groupDays = $group['exact_days'];
                             }
 
                             if (in_array($now, $groupDays)) {
@@ -148,6 +148,10 @@ class BotUserController extends Controller
                     'leads' => $data['leads'],
                     'active_students' => $data['active_students'],
                     'debtors' => $data['debtors'],
+                    "students_in_trial" => $data['students_in_trial'],
+                    "gone_active_students" => $data['gone_active_students'],
+                    "paid_this_month" => $data['paid_this_month'],
+                    "gone_trial_students" => $data['gone_trial_students'],
                 ];
 
                 $text = __('messages.message', $resAnswer);

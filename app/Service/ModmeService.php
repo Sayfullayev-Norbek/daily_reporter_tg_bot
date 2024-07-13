@@ -65,7 +65,7 @@ class ModmeService
             $response = $client->get($this->modme_url."/v2/groups",[
                 'query' => [
                     'branch_id' => $branch_id,
-                    'per_page' => 3,
+                    'per_page' => 1000,
                     'page' => $i
                 ],
                 'headers' => [

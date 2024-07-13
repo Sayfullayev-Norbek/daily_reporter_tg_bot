@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
                 $controller = app()->make(BotUserController::class);
                 $controller->plan_execution($chat_id, $token, $company_name, $lang);
             }
-        })->dailyAt('16:02');
+        })->dailyAt('16:53');
     }
 
     protected function commands(): void

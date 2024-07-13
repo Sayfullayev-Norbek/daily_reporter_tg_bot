@@ -17,7 +17,11 @@ Today's attendance:  :to_day
 • Active students: :active_students
 
 • Number of debtors: :debtors
-• Total debts: API
-    ",
+
+• Gone active students: :gone_active_students
+• Paid this month: :paid_this_month
+• Students in trial: :students_in_trial
+• Gone trial students: :gone_trial_students
+",
 ];
 

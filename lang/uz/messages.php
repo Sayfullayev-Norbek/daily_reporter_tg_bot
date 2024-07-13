@@ -14,9 +14,13 @@ Bugungi davomat: :to_day
 • Davomat belgilanmadi: :attendance_not_specified
 
 • Aktiv lidlar: :leads
-• Aktiv studentlar: API
+• Aktiv studentlar: :active_students
 
 • Qarzdorlar soni: :debtors
-• Umumiy qarzlar: API
+
+• Faol talabalar ketgan: :gone_active_students
+• Bu oy to'lagan: :paid_this_month
+• Sinovdagi talabalar: :students_in_trial
+• Sinov talabalar ketgan: :gone_trial_students
 ",
 ];
