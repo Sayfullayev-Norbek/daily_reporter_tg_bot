@@ -13,10 +13,10 @@ Bugungi davomat: :to_day
 • Darsga kelmadi: :did_not_come_to_class
 • Davomat belgilanmadi: :attendance_not_specified
 
-• Aktiv lidlar: API
+• Aktiv lidlar: :leads
 • Aktiv studentlar: API
 
-• Qarzdorlar soni: API
+• Qarzdorlar soni: :debtors
 • Umumiy qarzlar: API
 ",
 ];

@@ -13,10 +13,10 @@ Today's attendance:  :to_day
 • Missed classes: :did_not_come_to_class
 • Attendance not specified: :attendance_not_specified
 
-• Active leaders: API
-• Active students: API
+• Active leaders: :leads
+• Active students: :active_students
 
-• Number of debtors: API
+• Number of debtors: :debtors
 • Total debts: API
     ",
 ];

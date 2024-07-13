@@ -68,12 +68,15 @@ class BotUserController extends Controller
             $locale = $lang ?? 'en';
             App::setLocale($locale);
 
-            $data = $this->modmeService->checkCompany($token);
-            $branches = $data['data'];
+            $branches = $this->modmeService->checkCompany($token);
+            $branches = $branches['data'];
 
             foreach($branches as $branch){
                 $branch_id = $branch['id'];
                 $branch_name = $branch['name'];
+
+                $data = $this->modmeService->getDashboad($token, $branch_id);
+                $data = $data['data'];
 
                 $to_day = Carbon::now();
                 App::setLocale('en'); // dayName u/n en qilganmiz
@@ -141,7 +144,10 @@ class BotUserController extends Controller
                     'number_of_groups' => $number_of_groups,
                     'came_to_class' => $came_to_class,
                     'did_not_come_to_class' => $did_not_come_to_class,
-                    'attendance_not_specified' => $attendance_not_specified
+                    'attendance_not_specified' => $attendance_not_specified,
+                    'leads' => $data['leads'],
+                    'active_students' => $data['active_students'],
+                    'debtors' => $data['debtors'],
                 ];
 
                 $text = __('messages.message', $resAnswer);

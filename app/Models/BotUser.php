@@ -10,7 +10,7 @@ class BotUser extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["telegram_id","telegram_name", "company_id"];
+    protected $fillable = ["telegram_id","telegram_name", "modme_company_id"];
 
     public function company(): BelongsTo
     {

@@ -105,5 +105,26 @@ class ModmeService
             return $e->getMessage();
         }
     }
+
+    // active_students leads
+    public function getDashboad($token, $branch_id){
+        try{
+            $client = new Client();
+            $response = $client->get($this->modme_url."/v2/dashboard",[
+                'query' => [
+                    'branch_id' => $branch_id,
+                ],
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Content-Type' => 'application/json'
+                ]
+            ]);
+
+            return json_decode($response->getBody()->getContents(), true);
+        }catch(GuzzleException $e){
+            Log::error($e->getMessage());
+            return $e->getMessage();
+        }
+    }
 }
 

@@ -23,12 +23,12 @@ class Kernel extends ConsoleKernel
                 $company = Company::query()->where('modme_company_id', $modme_company_id)->first();
                 $token = $company->modme_token;
                 $company_name = $company->name;
-                $lang = 'en';
+                $lang = 'uz';
 
                 $controller = app()->make(BotUserController::class);
                 $controller->plan_execution($chat_id, $token, $company_name, $lang);
             }
-        })->dailyAt('22:33');
+        })->dailyAt('16:02');
     }
 
     protected function commands(): void

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('telegram_id')->unique();
             $table->string('telegram_name');
-            $table->foreignId('company_id')->constrained()->cascadeOnDelete();
+            $table->integer('modme_company_id')->default(0);
             $table->timestamps();
         });
     }

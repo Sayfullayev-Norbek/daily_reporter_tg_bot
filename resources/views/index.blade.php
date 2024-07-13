@@ -27,8 +27,8 @@
                         @endif
                     </p>
                     <div class="d-flex justify-content-center align-items-center" style="position: relative;">
-                        <a href="https://t.me/guruh_chat_nomer_bot?start={{ $company->modme_company_id }}" class="btn btn-primary text-white m-2" style="border-radius: 5px; border-bottom: 2px solid #007bff; margin: 2px;" target="_blank">
-                            https://t.me/guruh_chat_nomer_bot?start={{ $company->modme_company_id }}
+                        <a href="https://t.me/birinchitgbot?start={{ $company->modme_company_id }}" class="btn btn-primary text-white m-2" style="border-radius: 5px; border-bottom: 2px solid #007bff; margin: 2px;" target="_blank">
+                            https://t.me/birinchitgbot?start={{ $company->modme_company_id }}
                         </a>
                         <button class="btn btn-primary" onclick="copyToClipboard('linkInput', 'copyIcon', 'copyNotification')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16" id="copyIcon" style="border-radius: 3px; border-botton: 2px solid #007bff; margin: 2px;">
@@ -38,7 +38,7 @@
                         <div id="copyNotification" class="text-success" style="display: none; position: absolute; top: -20px; right: 0;">
                         </div>
                     </div>
-                    <input type="text" id="linkInput" value="https://t.me/guruh_chat_nomer_bot?start={{ $company->modme_company_id }}" readonly style="width: 100%; position: absolute; left: -9999px;">
+                    <input type="text" id="linkInput" value="https://t.me/birinchitgbot?start={{ $company->modme_company_id }}" readonly style="width: 100%; position: absolute; left: -9999px;">
 
                 </div>
             </div>
